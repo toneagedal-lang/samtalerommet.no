@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Samtalerommet – Et trygt sted å snakke</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sand: #f5f0e8;
+      --warm: #e8dfd0;
+      --clay: #c4a882;
+      --earth: #8b6e52;
+      --deep: #2c2118;
+      --mist: #7a8c82;
+      --green: #4a6558;
+      --light-green: #d4e0da;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--sand);
+      color: var(--deep);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(245, 240, 232, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(196, 168, 130, 0.2);
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--deep);
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--earth); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    nav ul li a {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--earth);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover { color: var(--deep); }
+
+    .nav-cta {
+      background: var(--green);
+      color: var(--sand) !important;
+      padding: 0.6rem 1.4rem;
+      border-radius: 2px;
+      transition: background 0.3s !important;
+    }
+
+    .nav-cta:hover { background: var(--deep) !important; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 4rem 6rem 6rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.2s;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5vw, 4.8rem);
+      font-weight: 300;
+      line-height: 1.12;
+      color: var(--deep);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.4s;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--earth);
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--mist);
+      max-width: 440px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.6s;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.8s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: var(--sand);
+      padding: 1rem 2.2rem;
+      border: none;
+      border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      background: var(--deep);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      color: var(--earth);
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      border-bottom: 1px solid var(--clay);
+      padding-bottom: 2px;
+      transition: color 0.3s;
+    }
+
+    .btn-secondary:hover { color: var(--deep); }
+
+    /* HERO VISUAL */
+    .hero-visual {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--light-green) 0%, var(--warm) 60%, var(--clay) 100%);
+      opacity: 0.6;
+    }
+
+    .hero-shape {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circle-art {
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      border: 1px solid rgba(139, 110, 82, 0.25);
+      position: relative;
+      animation: slowSpin 30s linear infinite;
+    }
+
+    .circle-art::before {
+      content: '';
+      position: absolute;
+      top: 20px; left: 20px; right: 20px; bottom: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(74, 101, 88, 0.2);
+    }
+
+    .circle-art::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(196,168,130,0.4), transparent 70%);
+      border-radius: 50%;
+    }
+
+    .quote-float {
+      position: absolute;
+      bottom: 15%;
+      left: 10%;
+      right: 10%;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--deep);
+      text-align: center;
+      opacity: 0.75;
+      line-height: 1.6;
+    }
+
+    /* SECTION: WHAT */
+    .section-what {
+      padding: 8rem 6rem;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 6rem;
+      align-items: start;
+      border-top: 1px solid rgba(196, 168, 130, 0.3);
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clay);
+      padding-top: 0.4rem;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300;
+      line-height: 1.25;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 em { font-style: italic; color: var(--earth); }
+
+    .lead {
+      font-size: 1rem;
+      line-height: 1.9;
+      color: var(--mist);
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+
+    /* PILLARS */
+    .pillars {
+      padding: 5rem 6rem 8rem;
+      background: var(--warm);
+    }
+
+    .pillars-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .pillar {
+      background: var(--sand);
+      padding: 2.5rem;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .pillar:hover { transform: translateY(-4px); }
+
+    .pillar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--green);
+    }
+
+    .pillar-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      color: rgba(196,168,130,0.3);
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .pillar h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 0.8rem;
+      color: var(--deep);
+    }
+
+    .pillar p {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--mist);
+    }
+
+    /* HOW */
+    .section-how {
+      padding: 8rem 6rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 1.5rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid rgba(196,168,130,0.2);
+      transition: background 0.3s;
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      color: var(--clay);
+      font-weight: 300;
+      padding-top: 0.1rem;
+    }
+
+    .step h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin-bottom: 0.4rem;
+    }
+
+    .step p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--mist);
+    }
+
+    .how-aside {
+      background: var(--light-green);
+      padding: 3rem;
+      border-radius: 2px;
+      text-align: center;
+    }
+
+    .how-aside .big-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem;
+      font-weight: 300;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .how-aside p {
+      font-size: 0.85rem;
+      color: var(--mist);
+      line-height: 1.6;
+    }
+
+    /* CTA STRIP */
+    .cta-strip {
+      background: var(--deep);
+      padding: 6rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-strip::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(74,101,88,0.3), transparent 70%);
+    }
+
+    .cta-strip h2 {
+      color: var(--sand);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .cta-strip p {
+      color: rgba(245,240,232,0.6);
+      font-size: 1rem;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .cta-strip .btn-primary {
+      background: var(--clay);
+      font-size: 1rem;
+      padding: 1.2rem 3rem;
+      position: relative;
+    }
+
+    .cta-strip .btn-primary:hover { background: var(--sand); color: var(--deep); }
+
+    /* FOOTER */
+    footer {
+      padding: 3rem 6rem;
+      border-top: 1px solid rgba(196,168,130,0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--clay);
+    }
+
+    footer a { color: var(--clay); text-decoration: none; }
+    footer a:hover { color: var(--earth); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slowSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      nav ul { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-visual { height: 40vh; }
+      .hero-text { padding: 5rem 2rem 3rem; }
+      .section-what, .section-how { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 2rem; }
+      .pillars { padding: 4rem 2rem; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .cta-strip { padding: 5rem 2rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">samtale<span>rommet</span></a>
+  <ul>
+    <li><a href="#om">Om oss</a></li>
+    <li><a href="#tilbud">Tilbud</a></li>
+    <li><a href="#slik">Slik fungerer det</a></li>
+    <li><a href="#kontakt" class="nav-cta">Ta kontakt</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow">Psykisk helse · Samtaler · Trygghet</p>
+    <h1>Et rom for deg<br>som <em>trenger</em><br>å snakke.</h1>
+    <p class="hero-desc">
+      I Samtalerommet møter du meg – en lyttende, profesjonell samtalepartner. Jeg skaper et trygt rom der du kan utforske tankene dine – i ditt eget tempo, via nettbasert samtale.
+    </p>
+    <div class="hero-actions">
+      <a href="#kontakt" class="btn-primary">Ta kontakt</a>
+      <a href="#om" class="btn-secondary">Les mer om oss</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-shape">
+      <div class="circle-art"></div>
+    </div>
+    <p class="quote-float">«Det viktigste skrittet er det første – å tørre å spørre om hjelp.»</p>
+  </div>
+</section>
+
+<!-- OM -->
+<section class="section-what" id="om">
+  <div class="section-label">Om Samtalerommet</div>
+  <div>
+    <h2>Jeg er her for deg,<br><em>uansett</em> hva du bærer på.</h2>
+    <p class="lead">
+      Samtalerommet er et tilbud innen psykisk helse, der du kan snakke med en erfaren terapeut om det som er vanskelig. Du trenger ikke ha en diagnose – du trenger bare ønske om å ha det bedre.
+    </p>
+    <p class="lead">
+      Jeg tilbyr individuelle samtaler og parsamtaler via nettbasert videosamtale, tilpasset der du er i livet akkurat nå.
+    </p>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="pillars" id="tilbud">
+  <div class="pillars-header">
+    <p class="section-label" style="text-align:center; margin-bottom:1rem;">Hva vi tilbyr</p>
+    <h2>Tilbud tilpasset <em>deg</em></h2>
+  </div>
+  <div class="pillars-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 800px; margin: 0 auto;">
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <h3>Individuelle samtaler</h3>
+      <p>En-til-en-samtaler med meg som terapeut. Vi jobber med alt fra stress og angst til livskriser og relasjonsproblemer – via nettbasert videosamtale.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">02</div>
+      <h3>Parsamtaler</h3>
+      <p>For par som ønsker å styrke kommunikasjonen, bearbeide konflikter eller navigere gjennom en vanskelig periode sammen – enkelt og fleksibelt via nett.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIK FUNGERER DET -->
+<section class="section-how" id="slik">
+  <div class="steps">
+    <p class="section-label" style="margin-bottom: 2rem;">Slik fungerer det</p>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>Ta kontakt</h4>
+        <p>Send meg en e-post på post@samtalerommet.no. Jeg svarer innen én arbeidsdag og hjelper deg å finne et tidspunkt som passer.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>Velg tid og format</h4>
+        <p>Vi avtaler en tid som passer deg. Alle samtaler foregår via sikker videosamtale, så du kan delta hjemmefra.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>Start din prosess</h4>
+        <p>I første samtale setter vi av tid til å bli kjent og avklare hva du ønsker å jobbe med. Derfra legger vi en plan sammen.</p>
+      </div>
+    </div>
+  </div>
+  <div class="how-aside">
+    <div class="big-text">100%</div>
+    <p style="margin-bottom:1.5rem;">nettbasert – du deltar trygt hjemmefra, uten reisetid.</p>
+    <div class="big-text" style="margin-top:1.5rem;">🔒</div>
+    <p>Full taushetsplikt og konfidensialitet – alltid.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-strip" id="kontakt">
+  <h2>Klar til å ta det første steget?</h2>
+  <p>Send meg en e-post, så finner vi en tid som passer deg.</p>
+  <a href="mailto:post@samtalerommet.no" class="btn-primary">Send en e-post</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Samtalerommet · samtalerommet.no</span>
+  <div style="display:flex; gap:2rem;">
+    <a href="#">Personvern</a>
+    <a href="#">Vilkår</a>
+    <a href="mailto:post@samtalerommet.no">post@samtalerommet.no</a>
+  </div>
+</footer>
+
+</body>
+</html>
